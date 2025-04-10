@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>yo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div class="h-screen w-full bg-zinc-900 flex flex-col justify-center">
+        <h1 class="text-white text-2xl font-bold text-center p-4 ">Login</h1>
+        <form action="/register" method="post" class="flex flex-col gap-4 items-center justify h-full w-full">
+            <input type="text" name="name" id="name" class="bg-zinc-800 w-1/2 text-white p-2 rounded-md" placeholder="Enter your name">
+            <input type="text" name="email" id="email" class="bg-zinc-800 w-1/2 text-white p-2 rounded-md" placeholder="Enter your email">
+            <input type="text" name="password" id="password" class="bg-zinc-800 w-1/2 text-white p-2 rounded-md" placeholder="Enter your password">
+            <input type="number" name="age" id="age" class="bg-zinc-800 text-white p-2 w-1/2 rounded-md" placeholder="Enter your age">
+            <input type="submit" value="Create Account" class="bg-zinc-800 text-white p-2 w-1/2 rounded-md cursor-pointer hover:bg-blue-700 transition duration-300 ease-in-out">
+        </form>
+    </div>
+</body>
+</html>
