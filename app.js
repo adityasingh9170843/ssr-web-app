@@ -83,7 +83,7 @@ app.get('/profile', isLoggedIn, async (req, res) => {
 
 function isLoggedIn(req, res, next) {
   const token = req.cookies.token;
-  console.log(token);
+  
   if (token === "") res.send("You are not logged in");
   else {
     jwt.verify(token, "secret", (err, decoded) => {
@@ -94,9 +94,10 @@ function isLoggedIn(req, res, next) {
         next();
       }
     });
+    console.log(req.user)
   }
 }
 
 app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port 30000");
 });
