@@ -76,12 +76,12 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-app.get('/profile', isLoggedIn, async (req, res) => {
+app.get('/profile', isLoggedInn, async (req, res) => {
     console.log(req.user)
     res.render("login")
 })
 
-function isLoggedIn(req, res, next) {
+function isLoggedInn(req, res, next) {
   const token = req.cookies.token;
   
   if (token === "") res.send("You are not logged in");
