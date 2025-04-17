@@ -84,7 +84,7 @@ app.get('/profile', isLoggedInn, async (req, res) => {
 function isLoggedInn(req, res, next) {
   const token = req.cookies.token;
   
-  if (token === "") res.send("You are not logged in");
+  if (token === "") res.send("You are not logged in please try again");
   else {
     jwt.verify(token, "secret", (err, decoded) => {
       if (err) {
@@ -99,5 +99,5 @@ function isLoggedInn(req, res, next) {
 }
 
 app.listen(3000, () => {
-  console.log("Server is running on port 30000");
+  console.log("Server is running on port 3000");
 });
