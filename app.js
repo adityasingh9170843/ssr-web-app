@@ -81,7 +81,7 @@ app.get('/profile', isLoggedInn, async (req, res) => {
     res.render("login")
 })
 
-function isLoggedInn(req, res, next) {
+function isLoggedInnmiddleware(req, res, next) {
   const token = req.cookies.token;
   
   if (token === "") res.send("You are not logged in please try again");
