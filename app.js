@@ -26,23 +26,27 @@ app.get("/", (req, res) => {
 
 app.post("/register", async (req, res) => {
   const { name, email, password, age } = req.body;
-  let user = await userModel.findOne({ email });
+  let user = await userModel.findOne({
+    email,
+  });
   if (user) {
     return res.status(500).send("User already exists");
   }
-  bcrypt.hash(password, 10, async (err, hash) => {
-    if (err) {
-      return res.status(500).send("Something went wrong");
-    }
-    let user = await userModel.create({
-      name,
-      email,
-      password: hash,
-      age,
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(password, salt, async (err, hash) => {
+      if (err) {
+        return res.status(500).send("Something went wrong");
+      }
+      let user = await userModel.create({
+        name,
+        email,
+        password: hash,
+        age,
+      });
+      let token = jwt.sign({ email: email, userId: user._id }, "secret");
+      res.cookie("token", token);
+      res.redirect("/login");
     });
-    let token = jwt.sign({ email: email, userId: user._id }, "secret");
-    res.cookie("token", token);
-    res.redirect("/login");
   });
 });
 
@@ -61,7 +65,6 @@ app.post("/login", async (req, res) => {
       return res.status(500).send("Something went wrong");
     }
     if (result) {
-      
       let token = jwt.sign({ email: email, userId: user._id }, "secret");
       res.cookie("token", token);
       res.status(200).send("Login successful");
@@ -76,25 +79,25 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-app.get('/profile', isLoggedInn, async (req, res) => {
-    console.log(req.user)
-    res.render("login")
-})
+app.get("/profile", isLoggedInn, async (req, res) => {
+  console.log(req.user);
+  res.render("login");
+});
 
-function isLoggedInnmiddleware(req, res, next) {
+function isLoggedInn(req, res, next) {
   const token = req.cookies.token;
-  
+
   if (token === "") res.send("You are not logged in please try again");
   else {
     jwt.verify(token, "secret", (err, decoded) => {
       if (err) {
         res.send("You are not logged in");
       } else {
-        req.user = decoded
+        req.user = decoded;
         next();
       }
     });
-    console.log(req.user)
+    console.log(req.user);
   }
 }
 
