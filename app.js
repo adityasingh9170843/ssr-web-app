@@ -67,7 +67,7 @@ app.post("/login", async (req, res) => {
     if (result) {
       let token = jwt.sign({ email: email, userId: user._id }, "secret");
       res.cookie("token", token);
-      res.status(200).send("Login successful");
+      res.redirect("/profile");
     } else {
       res.redirect("/login");
     }
@@ -80,18 +80,19 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/profile", isLoggedInn, async (req, res) => {
-  console.log(req.user);
-  res.render("login");
+  let user = await userModel.findOne({email: req.user.email})
+
+  res.render("profile",{user});
 });
 
 function isLoggedInn(req, res, next) {
   const token = req.cookies.token;
 
-  if (token === "") res.send("You are not logged in please try again");
+  if (token === "") res.redirect("/login");
   else {
     jwt.verify(token, "secret", (err, decoded) => {
       if (err) {
-        res.send("You are not logged in");
+        res.redirect("/login");
       } else {
         req.user = decoded;
         next();
