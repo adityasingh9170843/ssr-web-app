@@ -80,9 +80,22 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/profile", isLoggedInn, async (req, res) => {
-  let user = await userModel.findOne({email: req.user.email})
+  let user = await userModel.findOne({ email: req.user.email }).populate("posts");
+  console.log(user);
+  res.render("profile", { user });
+});
 
-  res.render("profile",{user});
+app.post("/post", isLoggedInn, async (req, res) => {
+  let { content } = req.body;
+  let user = await userModel.findOne({ email: req.user.email });
+  let post = await postModel.create({
+    user: user._id,
+    content: content,
+  });
+
+  user.posts.push(post._id);
+  await user.save();
+  res.redirect("/profile");
 });
 
 function isLoggedInn(req, res, next) {

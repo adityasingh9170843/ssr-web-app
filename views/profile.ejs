@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
   <body>
-    <div class="h-[100vh] w-full bg-zinc-900 flex flex-col ">
+    <div class="h-screen w-full bg-zinc-900 flex flex-col ">
       <a class="text-white p-3 pt-1 bg-red-600 m-4 w-1/9" href="/logout">< logout</a>
       <h1 class="text-white text-2xl font-bold text-center p-4">
         <span class="text-red-600">Hello </span><%= user.name %>
@@ -21,7 +21,7 @@
         class="flex flex-col gap-4 items-center justify-center w-full"
       >
         <textarea
-          name=""
+          name="content"
           placeholder="whats on your mind"
           class="resize-none bg-zinc-800 w-1/2 text-white p-2 rounded-md"
           id=""
@@ -29,9 +29,28 @@
         <input
           type="submit"
           value="Create New Post"
-          class="bg-zinc-800 text-white p-2 w-1/2 rounded-md cursor-pointer hover:bg-blue-700 transition duration-300 ease-in-out"
+          class="bg-zinc-800 text-white block p-2 w-1/2 rounded-md cursor-pointer hover:bg-blue-700 transition duration-300 ease-in-out"
         />
       </form>
+      <div class="posts mt-20 m-5">
+        <h3 class="text-zinc-400 p-4 ">Your Posts</h3>
+        <div class="post-container">
+          
+          <% user.posts.reverse().forEach((post) => {
+            %>
+            <div class="post w-1/2 p-5 border-2 bg-zinc-800 border-zinc-600 rounded-md m-4">
+              <h4 class="text-blue-600">@<%= user.name %></h4>
+              <p class="text-zinc-400 text-sm tracking-wider mt-3"><%= post.content %></p>
+              <div class="btn flex gap-4 mt-4 justify-end align-center">
+                <a href="" class="text-blue-600">Like</a>
+                <a href="" class="text-red-600">Edit</a>
+              </div>
+            </div>
+            <% }) %>
+          
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
