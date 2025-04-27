@@ -40,10 +40,11 @@
             %>
             <div class="post w-1/2 p-5 border-2 bg-zinc-800 border-zinc-600 rounded-md m-4">
               <h4 class="text-blue-600">@<%= user.name %></h4>
-              <p class="text-zinc-400 text-sm tracking-wider mt-3"><%= post.content %></p>
-              <div class="btn flex gap-4 mt-4 justify-end align-center">
-                <a href="" class="text-blue-600">Like</a>
-                <a href="" class="text-red-600">Edit</a>
+              <p class="text-zinc-400 text-sm tracking-wider mt-3 mb-2"><%= post.content %></p>
+              <small class="mt-5 text-white"><%= post.likes.length %> likes<small></small>
+              <div class="btn flex gap-4 mt-4  align-center">
+                <a href="/like/<%= post._id %>" class="text-blue-600"><%= post.likes.indexOf(user._id) ? "Like" : "Unlike" %></a>
+                <a href="/edit/<%= post._id %>" class="text-red-600">Edit</a>
               </div>
             </div>
             <% }) %>

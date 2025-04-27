@@ -20,6 +20,27 @@ app.use(urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public  ")));
 app.set("view engine", "ejs");
 
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images/uploads')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix)
+  }
+})
+
+const upload = multer({ storage: storage })
+
+
+
+
+
+
+
+
+
 app.get("/", (req, res) => {
   res.render("index");
 });
@@ -84,6 +105,41 @@ app.get("/profile", isLoggedInn, async (req, res) => {
   console.log(user);
   res.render("profile", { user });
 });
+
+app.get("/like/:id", isLoggedInn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
+  
+  if(post.likes.indexOf(req.user.userId) === -1){
+    post.likes.push(req.user.userId);
+  }
+  else{
+    post.likes.splice(post.likes.indexOf(req.user.userId), 1);
+  }
+  await post.save();
+  res.redirect("/profile");
+  
+});
+
+app.get("/edit/:id", isLoggedInn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
+  res.render("edit", { post });
+})
+
+app.post("/update/:id", isLoggedInn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id });
+  post.content = req.body.content;
+  await post.save();
+  res.redirect("/profile");
+
+})
+
+app.get("/test", (req, res) => {
+  res.render("test");
+})
+
+app.post("/upload",(req, res) => {
+  console.log(req.body);
+})
 
 app.post("/post", isLoggedInn, async (req, res) => {
   let { content } = req.body;
