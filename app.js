@@ -5,10 +5,12 @@ import { fileURLToPath } from "url";
 import fs from "fs";
 import path from "path";
 import { json, urlencoded } from "express";
-
+import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import multerconfig from "./config/multerconfig.js";
 import cookieParser from "cookie-parser";
+import multer from "multer";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -17,7 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public  ")));
+app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
 
@@ -26,8 +28,11 @@ const storage = multer.diskStorage({
     cb(null, './public/images/uploads')
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix)
+    crypto.randomBytes(12, function (err, bytes) {
+      const fn = bytes.toString('hex') + path.extname(file.originalname);
+      cb(null, fn)
+    })
+    
   }
 })
 
@@ -44,6 +49,8 @@ const upload = multer({ storage: storage })
 app.get("/", (req, res) => {
   res.render("index");
 });
+
+
 
 app.post("/register", async (req, res) => {
   const { name, email, password, age } = req.body;
@@ -106,6 +113,10 @@ app.get("/profile", isLoggedInn, async (req, res) => {
   res.render("profile", { user });
 });
 
+app.get("/profile/upload", isLoggedInn, (req, res) => {
+  res.render("profileupload");
+})
+
 app.get("/like/:id", isLoggedInn, async (req, res) => {
   let post = await postModel.findOne({ _id: req.params.id }).populate("user");
   
@@ -137,8 +148,8 @@ app.get("/test", (req, res) => {
   res.render("test");
 })
 
-app.post("/upload",(req, res) => {
-  console.log(req.body);
+app.post("/upload",upload.single("image"),(req, res) => {
+  console.log(req.file);
 })
 
 app.post("/post", isLoggedInn, async (req, res) => {

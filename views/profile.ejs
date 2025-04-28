@@ -7,11 +7,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
   <body>
-    <div class="h-screen w-full bg-zinc-900 flex flex-col ">
+    <div class="h-[150vh] w-full bg-zinc-900 flex flex-col ">
       <a class="text-white p-3 pt-1 bg-red-600 m-4 w-1/9" href="/logout">< logout</a>
-      <h1 class="text-white text-2xl font-bold text-center p-4">
+      <div class="flex flex-col justify-center items-center">
+        <div class="w-20 h-20  rounded-full ">
+          <img class="w-full h-full object-cover" src="/images/uploads/<%= user.profilepic %>" alt="">
+        </div>
+        <h1 class="text-white text-2xl font-bold text-center p-4">
         <span class="text-red-600">Hello </span><%= user.name %>
       </h1>
+      </div>
+      
       <h5 class="text-white font-bold text-center p-4">
         You can create a post
       </h5>
