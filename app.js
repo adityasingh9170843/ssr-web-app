@@ -148,8 +148,11 @@ app.get("/test", (req, res) => {
   res.render("test");
 })
 
-app.post("/upload",upload.single("image"),(req, res) => {
-  console.log(req.file);
+app.post("/upload",isLoggedInn,multerconfig.single("image"), async (req, res) => {
+  let user = await userModel.findOne({email:req.user.email})
+  user.profilepic = req.file.filename;
+  await user.save();
+  res.redirect("/profile");
 })
 
 app.post("/post", isLoggedInn, async (req, res) => {
